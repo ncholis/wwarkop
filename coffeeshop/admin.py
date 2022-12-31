@@ -37,13 +37,20 @@ admin.site.register(Drink, DrinkAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
+        (None, {'fields': ['customer']}),
         (None, {'fields': ['drink']}),
         (None, {'fields': ['quantity']}),
         (None, {'fields': ['ordered_at']}),
     ]
-    list_display = ('get_drink_cat', 'get_drink_type', 'get_drink_size', 'get_drink_price', 'quantity', 'ordered_at')
+    list_display = (
+        'get_customer', 'get_drink_cat', 'get_drink_type',
+        'get_drink_size', 'get_drink_price', 'quantity', 'ordered_at')
     list_filter = ['ordered_at']
     search_fields = ['drink__size__name', 'drink__drink_type__name']
+
+    def get_customer(self, obj):
+        return obj.customer
+    get_customer.short_description = 'Customer'
 
     def get_drink_type(self, obj):
         return obj.drink.drink_type
