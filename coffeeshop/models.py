@@ -23,23 +23,30 @@ class Size(models.Model):
         return self.name
 
 class Drink(models.Model):
-    price = models.DecimalField(max_digits=4, decimal_places=2)
+    price = models.PositiveIntegerField(default=0)
     drink_type = models.ForeignKey(DrinkType, on_delete=models.PROTECT)
     size = models.ForeignKey(Size, on_delete=models.PROTECT)
     class Meta:
         unique_together = ('drink_type', 'size')
+
     def __str__(self):
         # return self.drink_type.name + "_" + self.size.name
-        return repr(dict(id=self.id, drink_type=self.drink_type.name,
-            size=self.size.name, price=self.price))
+        return f'{self.drink_type}| {self.price} {self.size.name}'
+
+#        return repr(dict(id=self.id, drink_type=self.drink_type.name,
+#            size=self.size.name, price=self.price))
 
 class Order(models.Model):
+    customer = models.CharField(max_length=100, verbose_name="Name Customer")
     quantity = models.IntegerField()
     drink = models.ForeignKey(Drink, on_delete=models.PROTECT)
     ordered_at = models.DateTimeField('order_timestamp')
     def __str__(self):
-        return repr(dict(id=self.id, quantity=self.quantity,
-            drink=self.drink.drink_type.name))
+        return self.customer
+
+#       return repr(dict(id=self.id, quantity=self.quantity,
+#           drink=self.drink.drink_type.name))
+
     @classmethod
     def total_sales(self):
         return Order.objects.aggregate(total=Sum(F('drink__price') * F('quantity'),
