@@ -20,3 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('coffeeshop/', include('coffeeshop.urls')),
 ]
+
+admin.site.site_header = "W-Warkop"
+admin.site.site_title = "Website Warkop"
+admin.site.index_title = "Welcome to W-Warkop"
